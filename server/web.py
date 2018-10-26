@@ -1,5 +1,14 @@
 #!/usr/bin/python2
-from nevow import tags as t
+import subprocess
+import sys
+try:
+    from nevow import tags as t
+except:
+    print "#########\nWARNING: Module 'nevow' is not found. Installing...."
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'nevow', 'PyYAML==3.11'])
+    print "Done."
+    from nevow import tags as t
+#from nevow import tags as t
 from nevow.flat import flatten
 from twisted.web import server, resource, static
 from twisted.internet import reactor, endpoints
@@ -408,6 +417,11 @@ def parse_args():
 
 def load_games(opts):
     rv = {}
+    #does the 'games' folder exist? If not make it
+    if (os.path.isdir('games'))==False:
+        print "#########\nWARNING: Folder 'games' is not found. Creating...."
+        os.mkdir('games')
+        print "Done."
     for fn in os.listdir('games'):
         try:
             path = os.path.join('games', fn)
